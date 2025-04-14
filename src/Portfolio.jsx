@@ -177,7 +177,7 @@ export default function Portfolio() {
                 <div className="project-media">
                 <div className="media-card">
                     <video controls style={{ width: '450px', height: '300px' }}>
-                    <source src="/media/Tournament.mp4" type="video/mp4" />
+                    <source src="media/Tournament.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                     </video>
                 </div>
@@ -214,7 +214,7 @@ export default function Portfolio() {
                 <div className="project-media">
                   <div className="media-card full-width">
                     <video controls>
-                      <source src="/media/AyurAstra.mp4" type="video/mp4" />
+                      <source src="media/AyurAstra.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   </div>
@@ -242,7 +242,7 @@ export default function Portfolio() {
                 <div className="project-media">
                   <div className="media-card full-width">
                     <video controls>
-                      <source src="/media/GateGuard.mp4" type="video/mp4" />
+                      <source src="media/GateGuard.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   </div>
