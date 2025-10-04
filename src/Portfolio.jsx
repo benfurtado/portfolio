@@ -160,8 +160,9 @@ export default function Portfolio() {
               {/* Hero Cards - reference style */}
               <div className="hero-cards-wrapper">
                 <div className="hero-card">
-                  <h3 className="hero-card-title">15+ Projects</h3>
-                  <p className="hero-card-subtitle">Delivered</p>
+                <h3 className="hero-card-title">Bringing Ideas to Life</h3>
+<p className="hero-card-subtitle">Designing & Building Digital Experiences</p>
+
                 </div>
                 <div className="hero-card">
                   <h3 className="hero-card-title">3+ Years</h3>
@@ -210,6 +211,10 @@ export default function Portfolio() {
               <h3>Languages</h3>
               </div>
               <div className="skill-tags">
+                <span className="skill-tag">Rust</span>
+                <span className="skill-tag">C++</span>
+                <span className="skill-tag">C</span>
+                <span className="skill-tag">Java</span>
                 <span className="skill-tag">Python</span>
                 <span className="skill-tag">JavaScript</span>
                 <span className="skill-tag">HTML5</span>
@@ -227,6 +232,7 @@ export default function Portfolio() {
               <h3>Frameworks & Libraries</h3>
               </div>
               <div className="skill-tags">
+                <span className="skill-tag">Next.js</span>
                 <span className="skill-tag">Flutter</span>
                 <span className="skill-tag">React.js</span>
                 <span className="skill-tag">Django</span>
@@ -256,6 +262,9 @@ export default function Portfolio() {
                 <span className="skill-tag">GitHub</span>
                 <span className="skill-tag">Blender</span>
                 <span className="skill-tag">Figma</span>
+                <span className="skill-tag">Adobe Photoshop</span>
+                <span className="skill-tag">Adobe Illustrator</span>
+                <span className="skill-tag">Adobe XD</span>
                 <span className="skill-tag">GIMP</span>
                 <span className="skill-tag">Raspberry Pi</span>
                 <span className="skill-tag">ESP32</span>
@@ -356,18 +365,7 @@ export default function Portfolio() {
 
       {/* Metrics section removed per request */}
 
-      {/* CTA */}
-      <section className="section" id="cta">
-        <div className="section-container">
-          <h2 className="section-title">Let's work together</h2>
-          <div className="divider"></div>
-          <div className="cta-actions">
-            <a href="#contact" className="link-button" onClick={() => scrollToSection('contact')}>
-              Get In Touch
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* CTA removed per request */}
 
       {/* Experience */}
       <section className="section" id="experience">
@@ -389,6 +387,11 @@ export default function Portfolio() {
                   <li>Optimized code structure for better performance and scalability.</li>
                   <li>Led website management and enhancement initiatives.</li>
                 </ul>
+                <div className="project-links">
+                  <a href="https://dbit.in/" target="_blank" rel="noreferrer" className="link-button">
+                    Visit DBIT Website
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -404,9 +407,11 @@ export default function Portfolio() {
                   <li>Developed and maintained the CS Tennis Academy website using HTML, CSS, and JavaScript.</li>
                   <li>Currently developing a Flutter and Django-based tournament application, set to be launched as a business product.</li>
                 </ul>
-                <button className="link-button" onClick={() => openVideoModal("/media/Tournament.mp4")}>
-                  Watch Tournament App Demo
-                </button>
+                <div className="project-links">
+                  <a href="https://cstennisacademy.co.in/" target="_blank" rel="noreferrer" className="link-button">
+                    Visit CS Tennis Academy
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -442,6 +447,11 @@ export default function Portfolio() {
                   <li>Optimized code structure for better performance and scalability.</li>
                   <li>Led website management and enhancement initiatives.</li>
                 </ul>
+                <div className="project-links">
+                  <a href="https://dbit.in/" target="_blank" rel="noreferrer" className="link-button">
+                    Visit DBIT Website
+                  </a>
+                </div>
               </div>
             </div>
             <div className="timeline-item">
@@ -581,7 +591,7 @@ export default function Portfolio() {
                     <p className="cert-desc">Supervised/unsupervised learning, model evaluation and pipelines.</p>
                   </div>
                   <div className="cert-actions">
-                    <a className="chip" href="#">Verify</a>
+                    <a className="chip" href="https://www.coursera.org/account/accomplishments/verify/OK17RBMA1D1Q" target="_blank" rel="noreferrer">Verify</a>
                   </div>
                 </li>
                 <li className="cert-row">
@@ -592,7 +602,7 @@ export default function Portfolio() {
                     <p className="cert-desc">Agent frameworks, tool use, orchestration, production readiness.</p>
                   </div>
                   <div className="cert-actions">
-                    <a className="chip" href="#">Verify</a>
+                    <a className="chip" href="https://www.coursera.org/account/accomplishments/verify/LXM60J4Q4CNC" target="_blank" rel="noreferrer">Verify</a>
                   </div>
                 </li>
               </ul>
@@ -654,7 +664,7 @@ export default function Portfolio() {
               </div>
               <div className="contact-info">
                 <h3>LinkedIn</h3>
-                <a href="https://linkedin.com/in/benfurtado" target="_blank" rel="noreferrer">linkedin.com/in/benfurtado</a>
+                <a href="https://linkedin.com/in/ben-furtado-26ab4b201" target="_blank" rel="noreferrer">ben-furtado-26ab4b201</a>
               </div>
             </div>
             <div className="contact-card">
