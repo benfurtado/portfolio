@@ -6,6 +6,10 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Modal state for project videos
+  const [modalVideo, setModalVideo] = useState(null);
+  const [isPortraitVideo, setIsPortraitVideo] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll('.section');
@@ -26,6 +30,58 @@ export default function Portfolio() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // 3D Bento Scroll Animations
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections and animated elements
+    const sections = document.querySelectorAll('.section');
+    const animatedElements = document.querySelectorAll('.fade-in-up, .slide-in-left, .slide-in-right, .scale-in');
+    
+    [...sections, ...animatedElements].forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => {
+      [...sections, ...animatedElements].forEach((el) => {
+        observer.unobserve(el);
+      });
+    };
+  }, []);
+
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && modalVideo) {
+        closeVideoModal();
+      }
+    };
+
+    if (modalVideo) {
+      document.addEventListener('keydown', handleKeyDown);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [modalVideo]);
+
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -37,12 +93,30 @@ export default function Portfolio() {
     setIsMenuOpen(false);
   };
 
+  // Modal open/close handlers
+  const openVideoModal = (videoSrc) => {
+    setModalVideo(videoSrc);
+    setIsPortraitVideo(false); // Reset orientation
+  };
+  
+  const closeVideoModal = () => {
+    setModalVideo(null);
+    setIsPortraitVideo(false);
+  };
+
+  // Handle video load to detect orientation
+  const handleVideoLoad = (event) => {
+    const video = event.target;
+    const aspectRatio = video.videoWidth / video.videoHeight;
+    setIsPortraitVideo(aspectRatio < 1); // Portrait if width < height
+  };
+
   return (
     <div className="portfolio-container">
-      <nav className="navbar">
+      <nav className="navbar" role="navigation" aria-label="Main Navigation">
         <div className="nav-content">
-          <div className="logo" onClick={() => scrollToSection('profile')}>BF</div>
-          <div className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <div className="logo" onClick={() => scrollToSection('profile')} tabIndex={0} aria-label="Go to Profile" style={{outline: 'none'}}>BF</div>
+          <div className="menu-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)} tabIndex={0} aria-label="Toggle menu" style={{outline: 'none'}}>
             <div className={`hamburger ${isMenuOpen ? 'active' : ''}`}>
               <span></span>
               <span></span>
@@ -50,24 +124,26 @@ export default function Portfolio() {
             </div>
           </div>
           <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-            <li className={activeSection === 'profile' ? 'active' : ''}>
-              <a onClick={() => scrollToSection('profile')}>Profile</a>
-            </li>
-            <li className={activeSection === 'skills' ? 'active' : ''}>
-              <a onClick={() => scrollToSection('skills')}>Skills</a>
-            </li>
-            <li className={activeSection === 'experience' ? 'active' : ''}>
-              <a onClick={() => scrollToSection('experience')}>Experience</a>
-            </li>
-            <li className={activeSection === 'education' ? 'active' : ''}>
-              <a onClick={() => scrollToSection('education')}>Education</a>
-            </li>
-            <li className={activeSection === 'achievements' ? 'active' : ''}>
-              <a onClick={() => scrollToSection('achievements')}>Achievements</a>
-            </li>
-            <li className={activeSection === 'contact' ? 'active' : ''}>
-              <a onClick={() => scrollToSection('contact')}>Contact</a>
-            </li>
+            {[
+              { id: 'profile', label: 'Profile' },
+              { id: 'skills', label: 'Skills' },
+              { id: 'works', label: 'Works' },
+              { id: 'experience', label: 'Experience' },
+              { id: 'education', label: 'Education' },
+              { id: 'achievements', label: 'Achievements' },
+              { id: 'contact', label: 'Contact' }
+            ].map(link => (
+              <li key={link.id} className={activeSection === link.id ? 'active' : ''}>
+                <a
+                  onClick={() => scrollToSection(link.id)}
+                  tabIndex={0}
+                  aria-label={`Go to ${link.label}`}
+                  style={{outline: 'none'}}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </nav>
@@ -75,24 +151,37 @@ export default function Portfolio() {
       {/* Header/Hero Section */}
       <header className="hero">
         <div className="hero-content">
-          <h1 className="name">Ben Furtado</h1>
-          <div className="title-container">
-            <p className="profession">Full-Stack Developer</p>
-            <p className="specialty">AI & Automation Enthusiast</p>
+          <div className="hero-grid">
+            <div className="hero-left">
+              <div className="hero-kicker"><span className="kicker-dot" aria-hidden>◎</span> Ben Furtado</div>
+              <h1 className="hero-heading">Full‑Stack Developer</h1>
+              <p className="hero-subhead">AI & Automation enthusiast crafting scalable apps across web and mobile. Focused on clean UX, performance, and shipping real products.</p>
+
+              {/* Hero Cards - reference style */}
+              <div className="hero-cards-wrapper">
+                <div className="hero-card">
+                  <h3 className="hero-card-title">15+ Projects</h3>
+                  <p className="hero-card-subtitle">Delivered</p>
+                </div>
+                <div className="hero-card">
+                  <h3 className="hero-card-title">3+ Years</h3>
+                  <p className="hero-card-subtitle">Experience</p>
+                </div>
+              </div>
+
+              <div className="hero-actions">
+                <button className="link-button" onClick={() => scrollToSection('works')}>View Projects</button>
+                <button className="link-button" onClick={() => scrollToSection('contact')}>Contact Me</button>
+              </div>
+            </div>
+            <div className="hero-right">
+              <div className="hero-astronaut" aria-hidden></div>
           </div>
-          <div className="social-links">
-            <a href="https://linkedin.com/in/benfurtado" target="_blank" rel="noreferrer" className="social-button">
-              <i className="fa fa-linkedin"></i> LinkedIn
-            </a>
-            <a href="https://github.com/benfurtado" target="_blank" rel="noreferrer" className="social-button">
-              <i className="fa-brands fa-github"></i> GitHub
-            </a>
-            <a href="mailto:raynfurtado@gmail.com" className="social-button">
-              <i className="fa fa-envelope"></i> Email
-            </a>
           </div>
         </div>
       </header>
+
+      {/* Brands section removed per request */}
 
       {/* About */}
       <section className="section" id="profile">
@@ -100,9 +189,7 @@ export default function Portfolio() {
           <h2 className="section-title">Profile Summary</h2>
           <div className="divider"></div>
           <p className="profile-text">
-            I am a Full-Stack Developer with expertise in UI/UX design, machine learning, and mobile app development.
-            I have built real-world solutions in Flutter, React, and Django, integrating AI-powered features and automation workflows. 
-            My work spans web and mobile apps, embedded systems, and computer vision.
+            Full-Stack Developer with expertise in UI/UX design, machine learning, and mobile app development. Experienced in building real-world solutions in Flutter, React, and Django, integrating AI-powered features and automation workflows. Skilled in web and mobile apps, embedded systems, and computer vision.
           </p>
         </div>
       </section>
@@ -112,44 +199,172 @@ export default function Portfolio() {
         <div className="section-container">
           <h2 className="section-title">Technical Skills</h2>
           <div className="divider"></div>
-          <div className="skills-grid">
-            <div className="skill-category">
-              <h3>Frontend & UI/UX</h3>
-              <ul className="skill-list">
-                <li>Flutter</li>
-                <li>React Native</li>
-                <li>React.js</li>
-                <li>HTML5 / CSS3</li>
-                <li>JavaScript</li>
-              </ul>
+          
+          <div className="skills-container">
+            {/* Languages */}
+            <div className="skill-group fade-in-up">
+              <div className="skill-group-header">
+                <div className="skill-icon">
+                  <i className="fa fa-code"></i>
+                </div>
+              <h3>Languages</h3>
+              </div>
+              <div className="skill-tags">
+                <span className="skill-tag">Python</span>
+                <span className="skill-tag">JavaScript</span>
+                <span className="skill-tag">HTML5</span>
+                <span className="skill-tag">CSS3</span>
+                <span className="skill-tag">Dart</span>
+              </div>
             </div>
-            <div className="skill-category">
-              <h3>Backend</h3>
-              <ul className="skill-list">
-                <li>Django : Python, MySQL</li>
-                <li>Node.js</li>
-                <li>Express.js</li>
-                <li>REST APIs</li>
-                <li>Java</li>
-              </ul>
+
+            {/* Frameworks */}
+            <div className="skill-group fade-in-up">
+              <div className="skill-group-header">
+                <div className="skill-icon">
+                  <i className="fa fa-layer-group"></i>
             </div>
-            <div className="skill-category">
-              <h3>ML & AI</h3>
-              <ul className="skill-list">
-                <li>Supervised Machine Learning - <a href='https://www.coursera.org/account/accomplishments/verify/OK17RBMA1D1Q' target='_blank'>Coursera</a></li>
-                <li>NumPy / Pandas</li>
-                <li>scikit-learn</li>
-              </ul>
+              <h3>Frameworks & Libraries</h3>
+              </div>
+              <div className="skill-tags">
+                <span className="skill-tag">Flutter</span>
+                <span className="skill-tag">React.js</span>
+                <span className="skill-tag">Django</span>
+                <span className="skill-tag">Node.js</span>
+                <span className="skill-tag">Express</span>
+                <span className="skill-tag">TensorFlow.js</span>
+                <span className="skill-tag">OpenCV</span>
+                <span className="skill-tag">NumPy</span>
+                <span className="skill-tag">Pandas</span>
+                <span className="skill-tag">scikit-learn</span>
+                <span className="skill-tag">Tailwind CSS</span>
+              </div>
             </div>
-            <div className="skill-category">
-              <h3>Embedded & Tools</h3>
-              <ul className="skill-list">
-                <li>ESP32 / Raspberry Pi</li>
-                <li>Git / GitHub</li>
-                <li>Blender / Linux</li>
-                <li>AWS</li>
-              </ul>
+
+            {/* Tools & Platforms */}
+            <div className="skill-group fade-in-up">
+              <div className="skill-group-header">
+                <div className="skill-icon">
+                  <i className="fa fa-tools"></i>
             </div>
+              <h3>Tools & Platforms</h3>
+              </div>
+              <div className="skill-tags">
+                <span className="skill-tag">MySQL</span>
+                <span className="skill-tag">MongoDB</span>
+                <span className="skill-tag">Git</span>
+                <span className="skill-tag">GitHub</span>
+                <span className="skill-tag">Blender</span>
+                <span className="skill-tag">Figma</span>
+                <span className="skill-tag">GIMP</span>
+                <span className="skill-tag">Raspberry Pi</span>
+                <span className="skill-tag">ESP32</span>
+                <span className="skill-tag">Arduino</span>
+                <span className="skill-tag">Linux</span>
+              </div>
+            </div>
+
+            {/* Design & Other Skills */}
+            <div className="skill-group fade-in-up">
+              <div className="skill-group-header">
+                <div className="skill-icon">
+                  <i className="fa fa-palette"></i>
+                </div>
+                <h3>Design & Specializations</h3>
+              </div>
+              <div className="skill-tags">
+                <span className="skill-tag">UI/UX Design</span>
+                <span className="skill-tag">Graphic Design</span>
+                <span className="skill-tag">Hardware Integration</span>
+                <span className="skill-tag">Machine Learning</span>
+                <span className="skill-tag">Computer Vision</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Works/Portfolio - 3D Bento Style */}
+      <section className="section" id="works">
+        <div className="section-container">
+          <h2 className="section-title">Featured Works</h2>
+          <div className="divider"></div>
+          
+          <div className="works-grid">
+            <div className="works-card fade-in-up">
+              <div className="works-image-wrapper">
+                <div className="works-image-placeholder">
+                  <i className="fa fa-mobile-alt"></i>
+                </div>
+                <div className="works-cut-out"></div>
+              </div>
+              <div className="works-details">
+                <div className="works-badge">
+                  <span>Mobile App</span>
+                </div>
+                <h3 className="works-title">Basch Tournament App</h3>
+                <p className="works-description">Flutter & Django based tournament management system</p>
+                <button className="works-button" onClick={() => openVideoModal("/media/Tournament.mp4")}>
+                  <span>View Demo</span>
+                  <i className="fa fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div className="works-card fade-in-up">
+              <div className="works-image-wrapper">
+                <div className="works-image-placeholder">
+                  <i className="fa fa-eye"></i>
+                </div>
+                <div className="works-cut-out"></div>
+              </div>
+              <div className="works-details">
+                <div className="works-badge">
+                  <span>Computer Vision</span>
+                </div>
+                <h3 className="works-title">GateGuard System</h3>
+                <p className="works-description">Facial recognition & barcode entry-exit system</p>
+                <button className="works-button" onClick={() => openVideoModal("/media/GateGuard.mp4")}>
+                  <span>View Demo</span>
+                  <i className="fa fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div className="works-card fade-in-up">
+              <div className="works-image-wrapper">
+                <div className="works-image-placeholder">
+                  <i className="fa fa-leaf"></i>
+                </div>
+                <div className="works-cut-out"></div>
+              </div>
+              <div className="works-details">
+                <div className="works-badge">
+                  <span>AI/ML</span>
+                </div>
+                <h3 className="works-title">AyurAstra Plant Recognition</h3>
+                <p className="works-description">Plant recognition system with 3D model generation</p>
+                <button className="works-button" onClick={() => openVideoModal("/media/AyurAstra.mp4")}>
+                  <span>View Demo</span>
+                  <i className="fa fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Metrics section removed per request */}
+
+      {/* CTA */}
+      <section className="section" id="cta">
+        <div className="section-container">
+          <h2 className="section-title">Let's work together</h2>
+          <div className="divider"></div>
+          <div className="cta-actions">
+            <a href="#contact" className="link-button" onClick={() => scrollToSection('contact')}>
+              Get In Touch
+            </a>
           </div>
         </div>
       </section>
@@ -157,9 +372,62 @@ export default function Portfolio() {
       {/* Experience */}
       <section className="section" id="experience">
         <div className="section-container">
-          <h2 className="section-title">Experience</h2>
+          <h2 className="section-title">Work Experience</h2>
           <div className="divider"></div>
           <div className="timeline">
+
+            {/* DBIT Website Lead */}
+            <div className="timeline-item">
+              <div className="timeline-badge">
+                <span></span>
+              </div>
+              <div className="timeline-content">
+                <h3 className="job-title">Internship - Website Lead | DBIT Website</h3>
+                <p className="job-date">Don Bosco Institute of Technology, Mumbai | July 2024 - July 2025</p>
+                <ul className="job-duties">
+                  <li>Refined UI/UX design for an improved website experience as the Web Dev Head of CSI DBIT.</li>
+                  <li>Optimized code structure for better performance and scalability.</li>
+                  <li>Led website management and enhancement initiatives.</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* CS Tennis Academy Web */}
+            <div className="timeline-item">
+              <div className="timeline-badge">
+                <span></span>
+              </div>
+              <div className="timeline-content">
+                <h3 className="job-title">Full-Stack Web Developer | CS Tennis Academy</h3>
+                <p className="job-date">CS Tennis Academy, Mumbai | March 2024</p>
+                <ul className="job-duties">
+                  <li>Developed and maintained the CS Tennis Academy website using HTML, CSS, and JavaScript.</li>
+                  <li>Currently developing a Flutter and Django-based tournament application, set to be launched as a business product.</li>
+                </ul>
+                <button className="link-button" onClick={() => openVideoModal("/media/Tournament.mp4")}>
+                  Watch Tournament App Demo
+                </button>
+              </div>
+            </div>
+
+            {/* Basch Tournament App */}
+            <div className="timeline-item">
+              <div className="timeline-badge">
+                <span></span>
+              </div>
+              <div className="timeline-content">
+                <h3 className="job-title">Full-Stack App Developer | CS Tennis Academy</h3>
+                <p className="job-date">Basch Tournament App | March 2025 – Present</p>
+                <ul className="job-duties">
+                  <li>Created and maintained Basch app, where players and organizations can hold multi-sport tournaments and manage registrations and scoring through the app.</li>
+                  <li>Flutter and Django-based application, developed with a core Dev team.</li>
+                  <li>Releasing on Play Store and App Store soon.</li>
+                </ul>
+                <button className="link-button" onClick={() => openVideoModal("/media/Tournament.mp4")}>
+                  Watch Basch App Demo
+                </button>
+              </div>
+            </div>
 
             {/* CS Tennis Tournament App */}
             <div className="timeline-item">
@@ -167,36 +435,43 @@ export default function Portfolio() {
                 <span></span>
               </div>
               <div className="timeline-content">
-                <h3 className="job-title">CS Tennis Website & Tournament App</h3>
-                <p className="job-date">CS Tennis Academy - Mumbai, India | March 2025 – Present</p>
+                <h3 className="job-title">Internship - Website Lead | DBIT Website</h3>
+                <p className="job-date">Don Bosco Institute of Technology, Mumbai | July 2024 - July 2025</p>
                 <ul className="job-duties">
-                  <li>Developed and maintained the CS Tennis website using HTML, CSS, and JavaScript.</li>
-                  <li>Currently developing a Flutter + Django-based tournament app for CS Tennis Academy.</li>
-                  <li>Receiving a stipend for app development, which will soon be launched as a business product.</li>
+                  <li>Refined UI/UX design for an improved website experience as the Web Dev Head of CSI DBIT.</li>
+                  <li>Optimized code structure for better performance and scalability.</li>
+                  <li>Led website management and enhancement initiatives.</li>
                 </ul>
-                <div className="project-media">
-                <div className="media-card">
-                    <video controls style={{ width: '450px', height: '300px' }}>
-                    <source src="/media/Tournament.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div className="media-card">
-                    <img 
-                    src="media/image.png" 
-                    alt="Tournament App Preview" 
-                    style={{ width: 'auto', height: '300px' }} 
-                    />
-                </div>
-                </div>
-
-                <div className="project-links">
-                  <a href="https://cstennisacademy.co.in/" target="_blank" rel="noreferrer" className="link-button">
-                    <i className="fa fa-globe"></i> Live Website
-                  </a>
-                </div>
               </div>
             </div>
+            <div className="timeline-item">
+              <div className="timeline-badge">
+                <span></span>
+              </div>
+              <div className="timeline-content">
+                <h3 className="job-title">Full-Stack Web Developer | CS Tennis Academy</h3>
+                <p className="job-date">CS Tennis Academy, Mumbai | March 2024</p>
+                <ul className="job-duties">
+                  <li>Developed and maintained the CS Tennis Academy website using HTML, CSS, and JavaScript.</li>
+                  <li>Currently developing a Flutter and Django-based tournament application, set to be launched as a business product.</li>
+                </ul>
+              </div>
+            </div>
+            <div className="timeline-item">
+              <div className="timeline-badge">
+                <span></span>
+              </div>
+              <div className="timeline-content">
+                <h3 className="job-title">Full-Stack App Developer | CS Tennis Academy</h3>
+                <p className="job-date">Basch Tournament App | March 2025 – Present</p>
+                <ul className="job-duties">
+                  <li>Created and maintained Basch app, where players and organizations can hold multi-sport tournaments and manage registrations and scoring through the app.</li>
+                  <li>Flutter and Django-based application, developed with a core Dev team.</li>
+                  <li>Releasing on Play Store and App Store soon.</li>
+                </ul>
+              </div>
+            </div>
+
 
             {/* NBA Form Automation */}
             <div className="timeline-item">
@@ -204,21 +479,16 @@ export default function Portfolio() {
                 <span></span>
               </div>
               <div className="timeline-content">
-                <h3 className="job-title">AyurAstra For Codeverse Hackathon</h3>
-                <p className="job-date">Codeverse Hackathon - Mumbai, India | May 2023</p>
-                <p className="job-date">Won 3rd place in the Hackathon</p>
+                <h3 className="job-title">Codeverse Hackathon | 3rd Place Winner</h3>
+                <p className="job-date">November 2024 - December 2024</p>
                 <ul className="job-duties">
-                  <li>Automated plant 3D model generation and plant identification </li>
-                  <li>Developed using React js and blender suitable for a virtual herbal garden</li>
+                  <li>Developed a plant recognition system featuring mapped navigation to sellers and live seller information display.</li>
+                  <li>Built an automated 3D plant model generator using Blender.</li>
+                  <li>Secured 3rd place in the DBIT "Codeverse" Hackathon.</li>
                 </ul>
-                <div className="project-media">
-                  <div className="media-card full-width">
-                    <video controls>
-                      <source src="/media/AyurAstra.mp4" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </div>
+                <button className="link-button" onClick={() => openVideoModal("/media/AyurAstra.mp4")}>
+                  Watch AyurAstra Demo
+                </button>
                 <div className="project-links">
                   <a href="https://github.com/benfurtado/Codeverse_hackathon" target="_blank" rel="noreferrer" className="link-button">
                     <i className="fa-brands fa-github"></i> GitHub Repo
@@ -226,90 +496,50 @@ export default function Portfolio() {
                 </div>
               </div>
             </div>
+            <div className="timeline-item">
+              <div className="timeline-badge">
+                <span></span>
+              </div>
+              <div className="timeline-content">
+                <h3 className="job-title">Facial Recognition & Barcode Entry-Exit System (GateGuard)</h3>
+                <p className="job-date">College Project | July 2023 – Present</p>
+                <ul className="job-duties">
+                  <li>Developed "GateGuard" for access monitoring in the college library and incubation center using Django, HTML, CSS, and Raspberry Pi.</li>
+                  <li>Integrated computer vision with OpenCV to track and analyze security data.</li>
+                  <li>Created a fully functioning product to solve a real-world access control problem.</li>
+                </ul>
+                <button className="link-button" onClick={() => openVideoModal("/media/GateGuard.mp4")}>
+                  Watch GateGuard Demo
+                </button>
+              </div>
+            </div>
+            <div className="timeline-item">
+              <div className="timeline-badge">
+                <span></span>
+              </div>
+              <div className="timeline-content">
+                <h3 className="job-title">XRGO Securities — Cybersecurity Web Platform</h3>
+                <p className="job-date">Product in development | 2025</p>
+                <ul className="job-duties">
+                  <li>Building an enterprise‑grade website for a cybersecurity startup with clear pricing, services, and blog content.</li>
+                  <li>Focused on performance, accessibility, and scalable content architecture with reusable components.</li>
+                  <li>Sections include plans matrix, zero‑trust approach, security pillars, compliance mappings, FAQs, and articles.</li>
+                </ul>
+                <div className="project-links">
+                  <a href="https://xrgosecurities.com/" target="_blank" rel="noreferrer" className="link-button">
+                    Visit XRGO Securities
+                  </a>
+                </div>
+              </div>
+            </div>
 
             {/* GateGuard */}
-            <div className="timeline-item">
-              <div className="timeline-badge">
-                <span></span>
-              </div>
-              <div className="timeline-content">
-                <h3 className="job-title">GateGuard – Automated Entry-Exit System</h3>
-                <p className="job-date">College Library & Incubation Center - Mumbai, India | July 2023 – Present</p>
-                <ul className="job-duties">
-                  <li>Developed GateGuard Facial Recognition System using Django, HTML, CSS, and Raspberry Pi for access monitoring.</li>
-                  <li>Integrated computer vision using OpenCV to track and analyze security data.</li>
-                </ul>
-                <div className="project-media">
-                  <div className="media-card full-width">
-                    <video controls>
-                      <source src="/media/GateGuard.mp4" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Web Scraping & KPI Automation */}
-            <div className="timeline-item">
-              <div className="timeline-badge">
-                <span></span>
-              </div>
-              <div className="timeline-content">
-                <h3 className="job-title">Web Scraping & KPI Automation</h3>
-                <p className="job-date">Company Assignment - Mumbai, India | Nov 2024 – Dec 2024</p>
-                <ul className="job-duties">
-                  <li>Automated Amazon web scraping using Python.</li>
-                  <li>Implemented KPI calculations using Python & Shell scripting.</li>
-                </ul>
-                <div className="project-links">
-                  <a href="https://github.com/benfurtado/Web-Scrapping-and-KPI-calculation" target="_blank" rel="noreferrer" className="link-button">
-                    <i className="fa-brands fa-github"></i> GitHub Repo
-                  </a>
-                </div>
-              </div>
-            </div>
 
             {/* CSI Web Dev Head */}
-            <div className="timeline-item">
-              <div className="timeline-badge">
-                <span></span>
-              </div>
-              <div className="timeline-content">
-                <h3 className="job-title">CSI Web Dev Head</h3>
-                <ul className="job-duties">
-                <li>Refined the UI/UX to elevate user interaction and ensure a seamless experience across all devices.</li>
-                <li>Improved the codebase for improved performance and scalability, preparing it for long-term growth.</li>
-                </ul>
-
-                <div className="project-links">
-                  <a href="https://csi.dbit.in/" target="_blank" rel="noreferrer" className="link-button">
-                    <i className="fa fa-globe"></i> Website
-                  </a>
-                </div>
-              </div>
-            </div>
 
             {/* DBIT Website */}
-            <div className="timeline-item">
-              <div className="timeline-badge">
-                <span></span>
-              </div>
-              <div className="timeline-content">
-                <h3 className="job-title">Internship - DBIT Website</h3>
-                <p className="job-date">DBIT Website Lead - Mumbai, India | July 2024 – July 2025</p>
-                <ul className="job-duties">
-                  <li>Redesigned UI/UX design for an improved website experience.</li>
-                  <li>Optimized code structure for better performance and scalability.</li>
-                </ul>
-                <p className="note">Changes in this website will be pushed after completion (not updated)</p>
-                <div className="project-links">
-                  <a href="https://dbit.in/" target="_blank" rel="noreferrer" className="link-button">
-                    <i className="fa fa-globe"></i> Website
-                  </a>
-                </div>
-              </div>
-            </div>
 
           </div>
         </div>
@@ -325,9 +555,9 @@ export default function Portfolio() {
               <i className="fa fa-graduation-cap"></i>
             </div>
             <div className="education-details">
-              <h3>Don Bosco Institute of Technology</h3>
+              <h3>Don Bosco Institute of Technology, Mumbai</h3>
               <p>B.E. Information Technology</p>
-              <p className="education-date">Expected Graduation: July 2026</p>
+              <p className="education-date">Expected Graduation: July 2026 (Currently 4th year)</p>
             </div>
           </div>
         </div>
@@ -336,28 +566,59 @@ export default function Portfolio() {
       {/* Achievements */}
       <section className="section" id="achievements">
         <div className="section-container">
-          <h2 className="section-title">Achievements & Hackathons</h2>
+          <h2 className="section-title">Certificates & Achievements</h2>
           <div className="divider"></div>
-          <div className="achievements-grid">
-            <div className="achievement-card">
-              <div className="achievement-icon">🏆</div>
-              <p>3rd Place - DBIT Hackathon (Codeverse)</p>
+
+          <div className="achievements-pro">
+            <div className="certs-col">
+              <h3 className="subsection-title">Certificates</h3>
+              <ul className="cert-list">
+                <li className="cert-row">
+                  <div className="cert-icon">📜</div>
+                  <div className="cert-main">
+                    <h4 className="cert-title">Machine Learning</h4>
+                    <div className="cert-meta"><span>Coursera</span><span>2024</span></div>
+                    <p className="cert-desc">Supervised/unsupervised learning, model evaluation and pipelines.</p>
+                  </div>
+                  <div className="cert-actions">
+                    <a className="chip" href="#">Verify</a>
+                  </div>
+                </li>
+                <li className="cert-row">
+                  <div className="cert-icon">🤖</div>
+                  <div className="cert-main">
+                    <h4 className="cert-title">Agentic AI & LLM Apps</h4>
+                    <div className="cert-meta"><span>Python / GenAI</span><span>2025</span></div>
+                    <p className="cert-desc">Agent frameworks, tool use, orchestration, production readiness.</p>
+                  </div>
+                  <div className="cert-actions">
+                    <a className="chip" href="#">Verify</a>
+                  </div>
+                </li>
+              </ul>
             </div>
-            <div className="achievement-card">
-              <div className="achievement-icon">🏅</div>
-              <p>Placed 3rd in a college-level CRM project</p>
+
+            <div className="awards-col">
+              <h3 className="subsection-title">Awards</h3>
+              <div className="awards-timeline">
+                <div className="awards-line" aria-hidden></div>
+                <div className="awards-item">
+                  <div className="awards-dot"></div>
+                  <div className="awards-content">
+                    <h4 className="award-title">3rd Place — DBIT Hackathon (Codeverse)</h4>
+                    <p className="award-desc">Plant recognition with seller mapping and procedural 3D models generator.</p>
+                    <span className="award-date">Nov–Dec 2024</span>
+                  </div>
+                </div>
+                <div className="awards-item">
+                  <div className="awards-dot"></div>
+                  <div className="awards-content">
+                    <h4 className="award-title">3rd Place — CRM for Gym (InoQuest)</h4>
+                    <p className="award-desc">CRM concept & prototype for gym member lifecycle management.</p>
+                    <span className="award-date">2024</span>
             </div>
-            <div className="achievement-card">
-              <div className="achievement-icon">💻</div>
-              <p>SIH Participant | Multiple Hackathons</p>
             </div>
-            <div className="achievement-card">
-              <div className="achievement-icon">🚀</div>
-              <p>Project selected for incubation deployment</p>
             </div>
-            <div className="achievement-card">
-              <div className="achievement-icon">👨‍💻</div>
-              <p>Web Dev Head of CSI DBIT</p>
             </div>
           </div>
         </div>
@@ -411,9 +672,45 @@ export default function Portfolio() {
 
       <footer className="footer">
         <div className="footer-content">
-          <p>&copy; {new Date().getFullYear()} Ben Furtado. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Ben Furtado. All rights reserved.
+            <span style={{ marginLeft: 8, fontSize: '0.95em', color: '#dadce0' }}>| Portfolio UI v2</span>
+          </p>
         </div>
       </footer>
+
+      {/* Video Modal */}
+      {modalVideo && (
+        <div className="video-modal-overlay" onClick={closeVideoModal}>
+          <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="video-modal-close" onClick={closeVideoModal} aria-label="Close video">
+              <i className="fa fa-times"></i>
+            </button>
+            
+            <div className={`video-container ${isPortraitVideo ? 'portrait' : ''}`}>
+              <video 
+                className={`video-modal-player ${isPortraitVideo ? 'portrait' : ''}`}
+                controls 
+                autoPlay 
+                src={modalVideo}
+                onEnded={closeVideoModal}
+                onLoadedMetadata={handleVideoLoad}
+              >
+                Your browser does not support the video tag.
+              </video>
+              
+              <div className="video-controls-overlay">
+                <div className="video-title">
+                  {modalVideo.split('/').pop().replace('.mp4', '')}
+                </div>
+                <div className="video-hint">
+                  Press <kbd>Esc</kbd> to close
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

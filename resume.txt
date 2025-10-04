@@ -1,0 +1,152 @@
+Ben Furtado
+Email: furtadoben01@gmail.com                                                                              Linkedin: click me
+GitHub: benfurtado                                                                                                       Mobile: +91 9082868110
+________________________________________
+EDUCATION
+Don Bosco Institute of Technology Mumbai, India B.E. Information Technology Expected Graduation: July 2026, Currently 4th year of IT Engineering
+________________________________________
+SKILLS SUMMARY
+•	Languages: Python, JavaScript, HTML5, CSS3, Dart, 
+•	Frameworks: Flutter, React.js, Django, Node.js (Express), TensorFlow.js, OpenCV, NumPy, Pandas, scikit-learn, Tailwind CSS
+•	Tools: MySQL, MongoDB, Git, GitHub, Blender, Figma, GIMP
+•	Platforms: Raspberry Pi, ESP32, Arduino, Linux
+•	Soft Skills: UI/UX Design, Graphic Design, Hardware Integration
+________________________________________
+WORK EXPERIENCE
+INTERNSHIP - WEBSITE LEAD | DBIT WEBSITE | MUMBAI, INDIA July 2024 - July 2025
+Don Bosco Institute of Technology, Mumbai
+•	Refined UI/UX design for an improved website experience as the Web Dev Head of CSI DBIT.
+•	Optimized code structure for better performance and scalability.
+•	Led website management and enhancement initiatives.
+FULL-STACK WEB DEVELOPER | CS TENNIS ACADEMY | MUMBAI, INDIA March 2024 
+CS Tennis Academy
+•	Developed and maintained the CS Tennis Academy website using HTML, CSS, and JavaScript.
+•	Currently developing a Flutter and Django-based tournament application, set to be launched as a business product. CRM
+________________________________________
+FULL-STACK APP DEVELOPER | CS TENNIS ACADEMY | MUMBAI, INDIA March 2025 – Present
+Basch Tournament App 
+Basic Demo
+•	Releasing on Play store and App store soon
+•	Created and maintained Basch app, where players and organization can hold multi-sport tournaments and 
+have registrations and scoring done through the app
+•	It is a Flutter and Django-based application, which was developed by me and my core Dev team.
+________________________________________
+PROJECTS
+CODEVERSE HACKATHON | 3RD PLACE WINNER November 2024 - December 2024
+benfurtado/Codeverse_hackathon
+•	Developed a plant recognition system featuring mapped navigation to sellers and live seller information display.
+•	Built an automated 3D plant model generator using Blender.
+•	Secured 3rd place in the DBIT "Codeverse" Hackathon.
+FACIAL RECOGNITION & BARCODE ENTRY-EXIT SYSTEM (GATGUARD) | COLLEGE PROJECT July 2023 – Present
+Details
+•	Developed "GateGuard" for access monitoring in the college library and incubation center using Django, HTML, CSS, and Raspberry Pi.
+•	Integrated computer vision with OpenCV to track and analyze security data.
+•	Created a fully functioning product to solve a real-world access control problem.
+CRM FOR GYM APPLICATION | INOQUEST COMPETITION
+•	Designed and developed a CRM application concept for gym management.
+•	Achieved 3rd place in a college-level competition.
+
+High-level purpose
+
+XRGO is a reverse-proxy based security system that sits in front of customer-hosted sites/services to protect them from abusive traffic (DDoS, bad bots, suspicious connections) while keeping the protection logic hidden from the customer. It combines a user-facing control UI (Vite + React), server-side routing & control (Node.js), high-performance packet/tunnel/inspection components (Rust), and a fast analytics store for logs and metrics (ClickHouse).
+
+Main components
+
+Vite + React frontend
+
+Admin dashboard for customers/operators.
+
+Controls: blocklists, rate-limit rules, viewing logs/alerts, subscription & onboarding UI.
+
+Built with Vite for fast dev experience and quick builds; serves static frontend behind the main proxy.
+
+Node.js reverse proxy / control server
+
+Primary HTTP(S) reverse-proxy that terminates TLS, routes requests, applies high-level filtering and WAF-like rules.
+
+Handles management APIs, user auth, subscription validation, and exposes control endpoints for agents.
+
+Hides the protection logic from clients (clients see only normal traffic responses).
+
+Integrates with WebSocket gateway for agent connections and log ingestion.
+
+Rust-based agent / tunneler / performance layer
+
+High-performance tunneling or traffic-forwarding component written in Rust (used where low-latency/high-throughput matters).
+
+Responsible for TCP-level tunneling, fast packet handling, possibly Layer-4 inspection and NATing if needed.
+
+Runs on client VPS or on operator server depending on deployment (we discussed moving logic off client VPS to the server).
+
+Provides efficient connection handling and blocking at scale.
+
+Agents / VPS bot
+
+Installable script that runs on client VPS (or operator-managed server).
+
+Connects back to control server via WebSocket.
+
+Sends an init message on connect with authToken and port (explicitly not passed in the URL).
+
+Expects to receive logs filtered by the specific port and obey block rules from a JSON config.
+
+Collects system metrics and connection logs, reports blocked attempts and other telemetry to the central server.
+
+ClickHouse for logging & analytics
+
+Columnar DB chosen for extremely fast inserts and analytical queries on large volumes of logs (ideal for high-traffic DDoS events).
+
+Stores connection logs, blocked events, aggregated metrics (per-ip counters, timestamps, verdicts).
+
+Powers dashboards, alerting queries, and forensic queries during/after an attack.
+
+Key behaviors and protection features
+
+IP blocking / blocklists
+
+Blocks are applied based on a JSON config (static lists and dynamic temporary blocks).
+
+System logs blocked attempts and includes blocked IP metadata.
+
+Traffic inspection & filtering
+
+HTTP-level checks (headers, user-agent, rate, known bad patterns) in Node reverse-proxy.
+
+Layer-4/TCP filtering in Rust agent for very high throughput or SYN flood-style events.
+
+TCP tunneling
+
+Tunnel traffic from a public port (front-facing) to a protected backend port or origin.
+
+Allows hiding the origin server and moving mitigation upstream.
+
+Rate limiting & connection limiting
+
+Per-IP or per-subnet rate limiting to mitigate volumetric abuse.
+
+Connection caps and circuit-breakers to protect origin resources.
+
+Logging & alerting
+
+All events (allowed, throttled, blocked) are logged and shipped to ClickHouse.
+
+Alerts can be raised when thresholds exceed (sudden spike in requests, error rates).
+
+Auth & subscription validation
+
+Agents validate subscription status with backend before performing protection duties.
+________________________________________
+CERTIFICATES
+MACHINE LEARNING (COURSERA) | CERTIFICATE 
+Certificate
+•	Mastered concepts of supervised and unsupervised learning algorithms.
+•	Gained practical experience in building, training, and evaluating machine learning models.
+
+AI Agents and Agentic AI with Python & Generative AI
+Certificate 
+| August 2025
+•	Mastered the ability to build a complete AI agent framework in Python.
+•	Learned to design tool discovery systems and function-calling mechanisms to allow agents to perform meaningful actions.
+•	Gained experience creating production-ready agents for tasks like intelligent coding and documentation generation.
+
+
