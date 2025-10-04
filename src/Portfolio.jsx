@@ -704,6 +704,7 @@ export default function Portfolio() {
             
             <div className={`video-container ${isPortraitVideo ? 'portrait' : ''}`}>
               <video 
+                key={modalVideo}
                 className={`video-modal-player ${isPortraitVideo ? 'portrait' : ''}`}
                 controls 
                 autoPlay 
