@@ -95,7 +95,12 @@ export default function Portfolio() {
 
   // Modal open/close handlers
   const openVideoModal = (videoSrc) => {
-    setModalVideo(videoSrc);
+    // Ensure assets work on GitHub Pages and any subpath deployments
+    const isAbsolute = /^https?:\/\//i.test(videoSrc);
+    const normalized = isAbsolute
+      ? videoSrc
+      : `${process.env.PUBLIC_URL}${videoSrc.startsWith('/') ? '' : '/'}${videoSrc}`;
+    setModalVideo(normalized);
     setIsPortraitVideo(false); // Reset orientation
   };
   
