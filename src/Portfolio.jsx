@@ -459,33 +459,7 @@ export default function Portfolio() {
                 </div>
               </div>
             </div>
-            <div className="timeline-item">
-              <div className="timeline-badge">
-                <span></span>
-              </div>
-              <div className="timeline-content">
-                <h3 className="job-title">Full-Stack Web Developer | CS Tennis Academy</h3>
-                <p className="job-date">CS Tennis Academy, Mumbai | March 2024</p>
-                <ul className="job-duties">
-                  <li>Developed and maintained the CS Tennis Academy website using HTML, CSS, and JavaScript.</li>
-                  <li>Currently developing a Flutter and Django-based tournament application, set to be launched as a business product.</li>
-                </ul>
-              </div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-badge">
-                <span></span>
-              </div>
-              <div className="timeline-content">
-                <h3 className="job-title">Full-Stack App Developer | CS Tennis Academy</h3>
-                <p className="job-date">Basch Tournament App | March 2025 – Present</p>
-                <ul className="job-duties">
-                  <li>Created and maintained Basch app, where players and organizations can hold multi-sport tournaments and manage registrations and scoring through the app.</li>
-                  <li>Flutter and Django-based application, developed with a core Dev team.</li>
-                  <li>Releasing on Play Store and App Store soon.</li>
-                </ul>
-              </div>
-            </div>
+          
 
 
             {/* NBA Form Automation */}
