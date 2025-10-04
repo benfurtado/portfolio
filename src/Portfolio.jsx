@@ -379,27 +379,6 @@ export default function Portfolio() {
           <div className="divider"></div>
           <div className="timeline">
 
-            {/* DBIT Website Lead */}
-            <div className="timeline-item">
-              <div className="timeline-badge">
-                <span></span>
-              </div>
-              <div className="timeline-content">
-                <h3 className="job-title">Internship - Website Lead | DBIT Website</h3>
-                <p className="job-date">Don Bosco Institute of Technology, Mumbai | July 2024 - July 2025</p>
-                <ul className="job-duties">
-                  <li>Refined UI/UX design for an improved website experience as the Web Dev Head of CSI DBIT.</li>
-                  <li>Optimized code structure for better performance and scalability.</li>
-                  <li>Led website management and enhancement initiatives.</li>
-                </ul>
-                <div className="project-links">
-                  <a href="https://dbit.in/" target="_blank" rel="noreferrer" className="link-button">
-                    Visit DBIT Website
-                  </a>
-                </div>
-              </div>
-            </div>
-
             {/* CS Tennis Academy Web */}
             <div className="timeline-item">
               <div className="timeline-badge">
